@@ -14,7 +14,7 @@ use signal::{self, Signal};
 use watcher::{Event, Watcher};
 use pathop::PathOp;
 
-fn init_logger(debug: bool) {
+pub fn init_logger(debug: bool) {
     let mut log_builder = env_logger::LogBuilder::new();
     let level = if debug {
         log::LogLevelFilter::Debug
