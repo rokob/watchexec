@@ -125,6 +125,12 @@ pub fn get_args() -> Args {
         .join(" ");
     let paths = values_t!(args.values_of("path"), String).unwrap_or(vec![String::from(".")]);
 
+    if args.value_of("signal").is_some() && args.is_present("kill") {
+        // TODO: Error::argument_conflict() might be the better fit, usage was unclear, though
+        Error::value_validation_auto("--kill and --signal is ambiguous.\n       Hint: Use only '--signal SIGKILL' without --kill".to_string())
+            .exit();
+    }
+
     // Treat --kill as --signal SIGKILL (for compatibility with older syntax)
     let signal = if args.is_present("kill") {
         Some("SIGKILL".to_string())
@@ -173,12 +179,6 @@ pub fn get_args() -> Args {
     if signal.is_some() && args.is_present("postpone") {
         // TODO: Error::argument_conflict() might be the better fit, usage was unclear, though
         Error::value_validation_auto("--postpone and --signal are mutually exclusive".to_string())
-            .exit();
-    }
-
-    if signal.is_some() && args.is_present("kill") {
-        // TODO: Error::argument_conflict() might be the better fit, usage was unclear, though
-        Error::value_validation_auto("--kill and --signal is ambiguous.\n       Hint: Use only '--signal SIGKILL' without --kill".to_string())
             .exit();
     }
 
