@@ -47,7 +47,7 @@ pub fn run(args: cli::Args) {
         }
     });
 
-    init_logger(args.debug);
+    //init_logger(args.debug);
 
     let paths: Vec<PathBuf> = args.paths
         .iter()
